@@ -26,7 +26,13 @@ AIRTABLE_TABLE=Claims
 npm run dev
 ```
 
-5. Open the main flows:
+5. Run the unit tests:
+
+```bash
+npm test
+```
+
+6. Open the main flows:
 
 ```text
 http://localhost:3000/create
@@ -39,7 +45,21 @@ http://localhost:3000/gift/izzy-d-easter-2026
 - Shows a themed gift reveal page at `/gift/[id]`.
 - Stores gifts in a single Airtable table.
 - Lets recipients either submit a wallet address or mark that the sender already has it.
-- Supports default, birthday, and Easter gift experiences.
+- Supports default, birthday, Easter, and St. Patrick's Day gift experiences.
+
+## Repo Layout
+
+- `src/pages`
+  Next.js pages, routes, and API handlers.
+
+- `src/lib`
+  Airtable logic and shared helpers.
+
+- `src/styles`
+  Global app styling and holiday theme CSS.
+
+- `tests/unit`
+  Unit tests for reusable logic.
 
 ## Airtable Fields
 
