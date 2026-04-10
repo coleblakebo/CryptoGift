@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import Head from 'next/head'
+import { buildAbsoluteUrl, getSiteUrl } from '../lib/site'
 
 export default function HomePage() {
+  const pageUrl = getSiteUrl()
+  const ogImageUrl = buildAbsoluteUrl('/og-card.svg', pageUrl)
+
   return (
     <>
       <Head>
@@ -15,6 +19,12 @@ export default function HomePage() {
           property="og:description"
           content="Send a polished crypto gift in minutes with a festive reveal link that is clear and easy to claim."
         />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="KindredCoins social card" />
+        <meta name="twitter:image" content={ogImageUrl} />
       </Head>
       <div className="page-root landing-page">
         <div className="landing-glow glow-one" />

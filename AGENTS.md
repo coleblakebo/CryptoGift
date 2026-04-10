@@ -49,11 +49,25 @@ Core flow:
 
 ## Airtable
 
-The app expects one Airtable table, currently configured via:
+The app uses env-driven Airtable config.
+
+For Vercel environments, use:
 
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - `AIRTABLE_TABLE`
+
+For local development, the app also supports:
+
+- `AIRTABLE_LOCAL_ENV` with `dev` or `prod`
+- `AIRTABLE_DEV_API_KEY`
+- `AIRTABLE_DEV_BASE_ID`
+- `AIRTABLE_DEV_TABLE`
+- `AIRTABLE_PROD_API_KEY`
+- `AIRTABLE_PROD_BASE_ID`
+- `AIRTABLE_PROD_TABLE`
+
+When scoped local vars are present, local development defaults to `dev` unless `AIRTABLE_LOCAL_ENV=prod` is set.
 
 Recommended Airtable fields:
 

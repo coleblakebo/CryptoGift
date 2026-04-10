@@ -3,25 +3,44 @@ import Head from 'next/head'
 import { FormEvent, useEffect, useState } from 'react'
 
 import { getGiftById, Gift } from '../../lib/gifts'
+import { buildAbsoluteUrl, getSiteUrl, normalizeUrl } from '../../lib/site'
 
 type Stage = 'wrapped' | 'reveal' | 'form' | 'success'
 
 type GiftPageProps = {
   gift: Gift | null
+  pageUrl: string | null
+  ogImageUrl: string
 }
 
-export const getServerSideProps: GetServerSideProps<GiftPageProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<GiftPageProps> = async ({ params, req }) => {
   const giftId = typeof params?.id === 'string' ? params.id : ''
   const gift = giftId ? await getGiftById(giftId) : null
+  const forwardedProto = req.headers['x-forwarded-proto']
+  const protocol =
+    typeof forwardedProto === 'string'
+      ? forwardedProto.split(',')[0]
+      : req.headers.host?.includes('localhost')
+        ? 'http'
+        : 'https'
+  const host = req.headers['x-forwarded-host'] || req.headers.host
+  const resolvedSiteUrl =
+    typeof host === 'string' && host
+      ? normalizeUrl(`${protocol}://${host}`)
+      : getSiteUrl()
+  const pageUrl = giftId ? buildAbsoluteUrl(`/gift/${giftId}`, resolvedSiteUrl) : null
+  const ogImageUrl = buildAbsoluteUrl('/og-card.svg', resolvedSiteUrl)
 
   return {
     props: {
-      gift
+      gift,
+      pageUrl,
+      ogImageUrl
     }
   }
 }
 
-export default function GiftPage({ gift }: GiftPageProps) {
+export default function GiftPage({ gift, pageUrl, ogImageUrl }: GiftPageProps) {
   const occasionText = gift?.occasion?.toLowerCase() || ''
   const pageTitle = gift?.recipientName
     ? `${gift.recipientName}'s Gift | KindredCoins`
@@ -126,6 +145,12 @@ export default function GiftPage({ gift }: GiftPageProps) {
         <meta name="description" content={pageDescription} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
+        {pageUrl ? <meta property="og:url" content={pageUrl} /> : null}
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="KindredCoins social card" />
+        <meta name="twitter:image" content={ogImageUrl} />
       </Head>
       <div
         className={`page-root festive-page ${

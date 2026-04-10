@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { slugify } from '../lib/gift-utils'
+import { buildAbsoluteUrl, getSiteUrl } from '../lib/site'
 
 type Stage = 'form' | 'success'
 
@@ -32,6 +33,8 @@ const initialState: FormState = {
 }
 
 export default function CreateGiftPage() {
+  const pageUrl = buildAbsoluteUrl('/create', getSiteUrl())
+  const ogImageUrl = buildAbsoluteUrl('/og-card.svg', getSiteUrl())
   const [stage, setStage] = useState<Stage>('form')
   const [form, setForm] = useState<FormState>(initialState)
   const [slugTouched, setSlugTouched] = useState(false)
@@ -129,6 +132,12 @@ export default function CreateGiftPage() {
           property="og:description"
           content="Create a KindredCoins gift link, personalize the occasion, and share it with a recipient for manual crypto fulfillment."
         />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="KindredCoins social card" />
+        <meta name="twitter:image" content={ogImageUrl} />
       </Head>
       <div className="page-root landing-page create-page">
         <div className="landing-glow glow-one" />
