@@ -106,10 +106,12 @@ When adding a new holiday:
 
 ## Git Workflow
 
-- Always branch from `main`.
+- `main` is production.
+- `develop` is the integration branch for upcoming releases.
 - Do not work directly on `main`.
-- Create a feature or fix branch for every change.
-- Merge back through a pull request.
+- Prefer branching from `develop` for feature work.
+- Merge feature branches into `develop` through pull requests.
+- Merge `develop` into `main` when releasing.
 
 Suggested branch names:
 

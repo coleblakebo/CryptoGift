@@ -88,9 +88,11 @@ Recommended fields in your `Claims` table:
 
 ## Git Workflow
 
-- Always branch from `main`.
-- Create a feature branch before making changes.
-- Open a pull request back into `main` when the work is ready.
+- `main` is the production branch.
+- `develop` is the integration branch for upcoming releases.
+- Create feature branches from `develop`.
+- Open feature pull requests into `develop`.
+- Open a release pull request from `develop` into `main` when you are ready to ship.
 
 Example branch names:
 
@@ -100,10 +102,10 @@ Example branch names:
 
 ## CI / CD
 
-- GitHub Actions runs `npm test` and `npm run build` on pushes and pull requests.
+- GitHub Actions runs `npm test` and `npm run build` on pushes and pull requests for `develop`, `main`, and working branches.
 - Connect the GitHub repo to Vercel for hosting.
 - Use `main` as the production branch in Vercel.
-- Use feature branches and pull requests for preview deployments.
+- Use `develop` and feature branches for preview deployments.
 - Add your Airtable env vars in Vercel for Production and Preview environments.
 
 Recommended Vercel env vars:
@@ -111,6 +113,13 @@ Recommended Vercel env vars:
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - `AIRTABLE_TABLE`
+
+## Milestones And Releases
+
+- Use GitHub Milestones to group work like `MVP polish`, `Public beta`, or `Open launch`.
+- Attach issues and PRs to milestones as you plan work.
+- Treat merges to `main` as releases to production.
+- Create GitHub Releases like `v0.1.0`, `v0.2.0`, and `v0.2.1` after shipping meaningful changes to `main`.
 
 ## Notes
 
