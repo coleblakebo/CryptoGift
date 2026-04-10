@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { slugify } from '../lib/gift-utils'
 
@@ -21,7 +22,7 @@ const holidayOptions = ['Birthday', 'Easter', "St. Patrick's Day"]
 const initialState: FormState = {
   recipientName: '',
   recipientEmail: '',
-  senderName: 'Uncle Cole',
+  senderName: '',
   senderEmail: '',
   occasion: '',
   coin: 'BTC',
@@ -101,28 +102,41 @@ export default function CreateGiftPage() {
   }
 
   return (
-    <div className="page-root landing-page create-page">
-      <div className="landing-glow glow-one" />
-      <div className="landing-glow glow-two" />
-      <div className="landing-gridline gridline-left" />
-      <div className="landing-gridline gridline-right" />
-      <div className="landing-coin coin-float landing-coin-one" />
-      <div className="landing-coin coin-float landing-coin-two" />
-      <div className="landing-coin coin-float landing-coin-three" />
-      <div className="landing-orbit orbit-one" />
-      <div className="landing-orbit orbit-two" />
+    <>
+      <Head>
+        <title>Create a Gift | KindredCoins</title>
+        <meta
+          name="description"
+          content="Create a KindredCoins gift link, personalize the occasion, and share it with a recipient for manual crypto fulfillment."
+        />
+        <meta property="og:title" content="Create a Gift | KindredCoins" />
+        <meta
+          property="og:description"
+          content="Create a KindredCoins gift link, personalize the occasion, and share it with a recipient for manual crypto fulfillment."
+        />
+      </Head>
+      <div className="page-root landing-page create-page">
+        <div className="landing-glow glow-one" />
+        <div className="landing-glow glow-two" />
+        <div className="landing-gridline gridline-left" />
+        <div className="landing-gridline gridline-right" />
+        <div className="landing-coin coin-float landing-coin-one" />
+        <div className="landing-coin coin-float landing-coin-two" />
+        <div className="landing-coin coin-float landing-coin-three" />
+        <div className="landing-orbit orbit-one" />
+        <div className="landing-orbit orbit-two" />
 
-      <main className="card card-wide landing-card create-card">
-        {stage === 'form' ? (
-          <>
-            <section className="landing-kicker">CryptoGift Studio</section>
-            <h1 className="page-title create-title">Create a new gift</h1>
-            <p className="page-copy create-copy">
-              Create the gift record here, send the link, and fulfill the crypto manually after it is
-              claimed.
-            </p>
+        <main className="card card-wide landing-card create-card">
+          {stage === 'form' ? (
+            <>
+              <section className="landing-kicker">KindredCoins Studio</section>
+              <h1 className="page-title create-title">Create a new gift</h1>
+              <p className="page-copy create-copy">
+                Create the gift record here, send the link, and fulfill the crypto manually after it is
+                claimed.
+              </p>
 
-            <form className="gift-form create-form" onSubmit={submit}>
+              <form className="gift-form create-form" onSubmit={submit}>
               <label className="field">
                 <span>Recipient name</span>
                 <input
@@ -240,33 +254,34 @@ export default function CreateGiftPage() {
                   View sample gift
                 </Link>
               </div>
-            </form>
-          </>
-        ) : (
-          <section className="create-success">
-            <div className="landing-kicker">Gift ready</div>
-            <h2 className="create-title">Gift created</h2>
-            <p className="create-copy">
-              This record is ready to share and will flip to claimed when the recipient submits.
-            </p>
-            <div className="summary summary-success create-summary">
-              <input className="input" readOnly value={shareUrl} />
-              <div className="actions">
-                <button
-                  className="primary landing-primary"
-                  type="button"
-                  onClick={() => {
-                    setStage('form')
-                    setCreatedGiftId('')
-                  }}
-                >
-                  Create Another
-                </button>
+              </form>
+            </>
+          ) : (
+            <section className="create-success">
+              <div className="landing-kicker">Gift ready</div>
+              <h2 className="create-title">Gift created</h2>
+              <p className="create-copy">
+                This record is ready to share and will flip to claimed when the recipient submits.
+              </p>
+              <div className="summary summary-success create-summary">
+                <input className="input" readOnly value={shareUrl} />
+                <div className="actions">
+                  <button
+                    className="primary landing-primary"
+                    type="button"
+                    onClick={() => {
+                      setStage('form')
+                      setCreatedGiftId('')
+                    }}
+                  >
+                    Create Another
+                  </button>
+                </div>
               </div>
-            </div>
-          </section>
-        )}
-      </main>
-    </div>
+            </section>
+          )}
+        </main>
+      </div>
+    </>
   )
 }

@@ -1,6 +1,6 @@
-# CryptoGift
+# KindredCoins
 
-A small Next.js app for creating and sharing crypto gift links. You create a gift, send the recipient their URL, and when they claim it the same Airtable record flips from `unopened` to `claimed` for manual fulfillment.
+A small Next.js app for creating and sharing crypto gift links. KindredCoins lets you create a gift, send the recipient their URL, and track the same Airtable record from `unopened` to `claimed` for manual fulfillment.
 
 ## Quick Start
 

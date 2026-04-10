@@ -1,4 +1,5 @@
 ﻿import type { GetServerSideProps } from 'next'
+import Head from 'next/head'
 import { FormEvent, useEffect, useState } from 'react'
 
 import { getGiftById, Gift } from '../../lib/gifts'
@@ -22,6 +23,12 @@ export const getServerSideProps: GetServerSideProps<GiftPageProps> = async ({ pa
 
 export default function GiftPage({ gift }: GiftPageProps) {
   const occasionText = gift?.occasion?.toLowerCase() || ''
+  const pageTitle = gift?.recipientName
+    ? `${gift.recipientName}'s Gift | KindredCoins`
+    : 'Gift Reveal | KindredCoins'
+  const pageDescription = gift
+    ? `Open a KindredCoins gift for ${gift.recipientName} and claim the ${gift.coin} surprise.`
+    : 'Open a KindredCoins gift link and claim your surprise.'
   const isBirthday = occasionText.includes('birthday') || occasionText.includes('bday')
   const isEaster = occasionText.includes('easter')
   const isStPatricks =
@@ -113,29 +120,36 @@ export default function GiftPage({ gift }: GiftPageProps) {
   }
 
   return (
-    <div
-      className={`page-root festive-page ${
-        isBirthday
-          ? 'birthday-page'
-          : isEaster
-            ? 'easter-page'
-            : isStPatricks
-              ? 'stpatricks-page'
-              : 'default-gift-page'
-      }`}
-    >
-      <div className="festive-orb orb-one" />
-      <div className="festive-orb orb-two" />
-      <div className="festive-orb orb-three" />
-      <div className="festive-streamer streamer-left" />
-      <div className="festive-streamer streamer-right" />
-      {isBirthday ? (
-        <div className="birthday-banner-wall" aria-hidden="true">
-          <span>HAPPY BIRTHDAY</span>
-          <span>HAPPY BIRTHDAY</span>
-          <span>HAPPY BIRTHDAY</span>
-        </div>
-      ) : null}
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+      </Head>
+      <div
+        className={`page-root festive-page ${
+          isBirthday
+            ? 'birthday-page'
+            : isEaster
+              ? 'easter-page'
+              : isStPatricks
+                ? 'stpatricks-page'
+                : 'default-gift-page'
+        }`}
+      >
+        <div className="festive-orb orb-one" />
+        <div className="festive-orb orb-two" />
+        <div className="festive-orb orb-three" />
+        <div className="festive-streamer streamer-left" />
+        <div className="festive-streamer streamer-right" />
+        {isBirthday ? (
+          <div className="birthday-banner-wall" aria-hidden="true">
+            <span>HAPPY BIRTHDAY</span>
+            <span>HAPPY BIRTHDAY</span>
+            <span>HAPPY BIRTHDAY</span>
+          </div>
+        ) : null}
       {isBirthday && (stage === 'reveal' || stage === 'success') ? (
         <div className="balloon-cluster" aria-hidden="true">
           <span className="balloon balloon-pink" />
@@ -197,21 +211,21 @@ export default function GiftPage({ gift }: GiftPageProps) {
         </div>
       ) : null}
 
-      <main
-        className={`card gift-card ${
-          isBirthday
-            ? 'birthday-card'
-            : isEaster
-              ? 'easter-card'
-              : isStPatricks
-                ? 'stpatricks-card'
-                : 'default-gift-card'
-        }`}
-      >
+        <main
+          className={`card gift-card ${
+            isBirthday
+              ? 'birthday-card'
+              : isEaster
+                ? 'easter-card'
+                : isStPatricks
+                  ? 'stpatricks-card'
+                  : 'default-gift-card'
+          }`}
+        >
         {stage === 'wrapped' && (
           <section className="gift-landing">
             <div className="eyebrow">A surprise is waiting</div>
-            <h2>Open your CryptoGift</h2>
+            <h2>Open your KindredCoins gift</h2>
             <p className="help">
               {gift.recipientName}, tap the{' '}
               {isEaster ? 'egg' : isStPatricks ? 'pot of gold' : 'present'} to see what is inside.
@@ -336,7 +350,8 @@ export default function GiftPage({ gift }: GiftPageProps) {
             </div>
           </section>
         )}
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   )
 }

@@ -1,8 +1,8 @@
-# CryptoGift Agent Guide
+# KindredCoins Agent Guide
 
 ## Project Summary
 
-CryptoGift is a small Next.js Pages Router app for creating themed crypto gift links.
+KindredCoins is a small Next.js Pages Router app for creating themed crypto gift links.
 
 Core flow:
 
