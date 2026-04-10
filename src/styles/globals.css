@@ -106,6 +106,9 @@ h2{margin:0 0 8px 0}
 .create-summary{width:min(100%,560px);margin-top:22px;padding:22px;border-radius:22px;background:linear-gradient(180deg,rgba(13,28,47,.92) 0,rgba(10,22,38,.88) 100%);border:1px solid rgba(129,198,255,.12);box-shadow:0 18px 34px rgba(0,0,0,.16)}
 .create-summary .input{margin-bottom:0;padding:13px 14px;border-radius:14px;border:1px solid rgba(127,180,219,.18);background:rgba(7,16,28,.78);color:#f7fbff}
 .create-summary .actions{margin-top:14px;justify-content:center}
+.create-success-actions{margin-top:14px;margin-bottom:4px}
+.create-copy-button{min-width:140px;color:#d8efff;border-color:rgba(159,216,255,.3);background:rgba(255,255,255,.04)}
+.create-copy-button:hover{background:rgba(159,216,255,.12);border-color:rgba(159,216,255,.52);color:#f7fbff}
 .landing-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}
 .landing-grid-single{grid-template-columns:1fr}
 .landing-panel{padding:26px;border-radius:22px;border:1px solid rgba(129,198,255,.12);box-shadow:0 18px 34px rgba(0,0,0,.16)}
