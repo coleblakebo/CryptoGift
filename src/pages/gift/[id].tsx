@@ -1,6 +1,5 @@
 ﻿import type { GetServerSideProps } from 'next'
 import { FormEvent, useEffect, useState } from 'react'
-import confetti from 'canvas-confetti'
 
 import { getGiftById, Gift } from '../../lib/gifts'
 
@@ -41,11 +40,29 @@ export default function GiftPage({ gift }: GiftPageProps) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (stage === 'reveal') {
-      confetti({
-        particleCount: isBirthday ? 120 : isStPatricks ? 110 : isEaster ? 90 : 80,
-        spread: isBirthday ? 90 : isStPatricks ? 85 : isEaster ? 75 : 60
+    if (stage !== 'reveal') {
+      return
+    }
+
+    let cancelled = false
+
+    void import('canvas-confetti')
+      .then(({ default: confetti }) => {
+        if (cancelled) {
+          return
+        }
+
+        confetti({
+          particleCount: isBirthday ? 120 : isStPatricks ? 110 : isEaster ? 90 : 80,
+          spread: isBirthday ? 90 : isStPatricks ? 85 : isEaster ? 75 : 60
+        })
       })
+      .catch(() => {
+        // Skip the effect if the client-only confetti bundle cannot be loaded.
+      })
+
+    return () => {
+      cancelled = true
     }
   }, [isBirthday, isEaster, isStPatricks, stage])
 
