@@ -1,0 +1,22 @@
+{
+  "name": "cryptogift",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "canvas-confetti": "1.6.0",
+    "dotenv": "^17.4.1",
+    "next": "13.5.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.4.1",
+    "@types/react": "18.2.21",
+    "typescript": "5.1.6"
+  }
+}
