@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { slugify } from '../lib/gift-utils'
 
 type Stage = 'form' | 'success'
 
@@ -27,14 +28,6 @@ const initialState: FormState = {
   amountDisplay: '',
   messageFromYou: '',
   giftId: ''
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
 }
 
 export default function CreateGiftPage() {

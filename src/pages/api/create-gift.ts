@@ -1,27 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { createGift, CreateGiftInput } from '../../lib/gifts'
-
-function normalizeText(value: unknown) {
-  return typeof value === 'string' ? value.trim() : ''
-}
-
-function normalizeAmountDisplay(value: unknown) {
-  const text = normalizeText(value)
-  if (!text) {
-    return ''
-  }
-
-  if (/^[\d,.]+$/.test(text)) {
-    return `$${text}`
-  }
-
-  return text
-}
-
-function normalizeEmail(value: unknown) {
-  return normalizeText(value).toLowerCase()
-}
+import {
+  isValidEmail,
+  normalizeAmountDisplay,
+  normalizeEmail,
+  normalizeText
+} from '../../lib/gift-utils'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -54,11 +39,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Please fill out every field.' })
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.recipientEmail)) {
+  if (!isValidEmail(payload.recipientEmail)) {
     return res.status(400).json({ error: 'Please enter a valid recipient email.' })
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.senderEmail)) {
+  if (!isValidEmail(payload.senderEmail)) {
     return res.status(400).json({ error: 'Please enter a valid sender email.' })
   }
 

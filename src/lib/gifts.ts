@@ -1,4 +1,5 @@
 import { loadLocalEnv } from './env'
+import { buildGiftUrl, toGiftStatus } from './gift-utils'
 
 export type GiftStatus = 'unopened' | 'claimed' | 'sent'
 
@@ -48,9 +49,7 @@ function getAirtableConfig() {
 }
 
 function mapAirtableFieldsToGift(fields: Record<string, unknown>): Gift {
-  const rawStatus = typeof fields.status === 'string' ? fields.status : 'unopened'
-  const status: GiftStatus =
-    rawStatus === 'claimed' || rawStatus === 'sent' ? rawStatus : 'unopened'
+  const status = toGiftStatus(fields.status)
 
   return {
     giftId: String(fields.giftId || ''),
@@ -127,8 +126,7 @@ export async function createGift(input: CreateGiftInput) {
   }
 
   const now = new Date().toISOString()
-  const normalizedOrigin = input.origin?.replace(/\/+$/, '') || ''
-  const giftUrl = normalizedOrigin ? `${normalizedOrigin}/gift/${input.giftId}` : null
+  const giftUrl = buildGiftUrl(input.origin, input.giftId)
   const gift: Gift = {
     ...input,
     giftUrl,
