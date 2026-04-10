@@ -28,14 +28,14 @@ What this includes
 - A gift creation UI at `/create`.
 - A dynamic gift reveal and claim page at `/gift/[id]`.
 - A single Airtable table for the full gift lifecycle.
-- Creator fields for recipient name, recipient email, sender, sender email, occasion, coin, amount, slug, and message.
+- Creator fields for recipient name, recipient email, sender, occasion, coin, amount, slug, and message.
+- Local JSON fallback in `data/gifts.json` for development backup.
 
 Current Airtable fields
 - `giftId`
 - `recipientName`
 - `recipientEmail`
 - `senderName`
-- `senderEmail`
 - `occasion`
 - `coin`
 - `amountDisplay`
@@ -52,4 +52,5 @@ Current lifecycle
 
 Notes
 - Airtable is the durable source of truth and can trigger automations using `recipientEmail`.
+- Local JSON is only a dev fallback and is not durable on Vercel.
 - The app never sends crypto automatically and does not handle private keys.
