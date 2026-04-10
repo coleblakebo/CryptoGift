@@ -1,41 +1,56 @@
-# CryptoGift - E-Card MVP
+# CryptoGift
 
-Minimal Next.js MVP for personalized crypto gift links. You create a gift record, send the recipient a URL, and when they submit their wallet address the same Airtable record flips from `unopened` to `claimed` for manual fulfillment.
+A small Next.js app for creating and sharing crypto gift links. You create a gift, send the recipient their URL, and when they claim it the same Airtable record flips from `unopened` to `claimed` for manual fulfillment.
 
-Quick start
+## Quick Start
 
-1. Install dependencies:
+1. Clone the repo and open it in VS Code.
+
+2. Install dependencies:
 
 ```bash
-cd CryptoGift
 npm install
 ```
 
-2. Run the dev server:
+3. Create a `.env.local` file in the project root:
+
+```env
+AIRTABLE_API_KEY=your_airtable_token
+AIRTABLE_BASE_ID=your_base_id
+AIRTABLE_TABLE=Claims
+```
+
+4. Run the dev server:
 
 ```bash
 npm run dev
 ```
 
-3. Try the main flows:
+5. Open the main flows:
 
-```bash
+```text
 http://localhost:3000/create
 http://localhost:3000/gift/izzy-d-easter-2026
 ```
 
-What this includes
-- A gift creation UI at `/create`.
-- A dynamic gift reveal and claim page at `/gift/[id]`.
-- A single Airtable table for the full gift lifecycle.
-- Creator fields for recipient name, recipient email, sender, occasion, coin, amount, slug, and message.
-- Local JSON fallback in `data/gifts.json` for development backup.
+## What It Does
 
-Current Airtable fields
+- Creates gift records at `/create`.
+- Shows a themed gift reveal page at `/gift/[id]`.
+- Stores gifts in a single Airtable table.
+- Lets recipients either submit a wallet address or mark that the sender already has it.
+- Supports default, birthday, and Easter gift experiences.
+
+## Airtable Fields
+
+Recommended fields in your `Claims` table:
+
 - `giftId`
+- `giftUrl`
 - `recipientName`
 - `recipientEmail`
 - `senderName`
+- `senderEmail`
 - `occasion`
 - `coin`
 - `amountDisplay`
@@ -45,12 +60,15 @@ Current Airtable fields
 - `claimedAt`
 - `createdAt`
 
-Current lifecycle
-- `unopened`: gift exists and is ready to share.
-- `claimed`: recipient submitted a wallet address.
-- `sent`: owner manually sent the crypto.
+## Status Lifecycle
 
-Notes
-- Airtable is the durable source of truth and can trigger automations using `recipientEmail`.
-- Local JSON is only a dev fallback and is not durable on Vercel.
-- The app never sends crypto automatically and does not handle private keys.
+- `unopened`: gift was created and is ready to share
+- `claimed`: recipient claimed the gift
+- `sent`: crypto was manually fulfilled by the sender
+
+## Notes
+
+- Airtable is the only source of truth.
+- The app saves `giftId` as the canonical identifier and can also store the full `giftUrl` used at creation time.
+- During development, the full gift URL can change if you use tunnels like ngrok or Cloudflare Tunnel.
+- The app does not send crypto automatically and does not manage private keys.
