@@ -103,6 +103,7 @@ Example branch names:
 ## CI / CD
 
 - GitHub Actions runs `npm test` and `npm run build` on pushes and pull requests for `develop`, `main`, and working branches.
+- A separate `Main Merge Guard` workflow can be required on `main` so only `develop` is allowed to merge into `main`.
 - Connect the GitHub repo to Vercel for hosting.
 - Use `main` as the production branch in Vercel.
 - Use `develop` and feature branches for preview deployments.
@@ -119,7 +120,9 @@ Recommended Vercel env vars:
 - Use GitHub Milestones to group work like `MVP polish`, `Public beta`, or `Open launch`.
 - Attach issues and PRs to milestones as you plan work.
 - Treat merges to `main` as releases to production.
-- Create GitHub Releases like `v0.1.0`, `v0.2.0`, and `v0.2.1` after shipping meaningful changes to `main`.
+- A GitHub Actions release workflow now creates a GitHub Release automatically on every merge or push to `main`.
+- Automatic releases currently use tags like `release-YYYYMMDD-HHMMSS-<sha>`.
+- If you want formal semantic versions later, you can switch this to `v0.1.0`, `v0.2.0`, and `v0.2.1`.
 
 ## Notes
 

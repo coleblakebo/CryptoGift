@@ -112,6 +112,8 @@ When adding a new holiday:
 - Prefer branching from `develop` for feature work.
 - Merge feature branches into `develop` through pull requests.
 - Merge `develop` into `main` when releasing.
+- Pushes to `main` also trigger an automatic GitHub Release workflow.
+- A GitHub Actions merge guard is used so `main` should only accept pull requests whose head branch is `develop`.
 
 Suggested branch names:
 

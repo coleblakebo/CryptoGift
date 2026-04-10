@@ -1,0 +1,19 @@
+name: Main Merge Guard
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  require-develop-head:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ensure PR source branch is develop
+        run: |
+          if [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "Only pull requests from develop may merge into main."
+            echo "Current source branch: ${{ github.head_ref }}"
+            exit 1
+          fi
