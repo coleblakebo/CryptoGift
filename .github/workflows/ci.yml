@@ -41,7 +41,7 @@ jobs:
         if: always()
         uses: vercel/repository-dispatch/actions/status@v1
         with:
-          name: Vercel - kindred-coins: test
+          name: "Vercel - kindred-coins: test"
 
   build:
     runs-on: ubuntu-latest
@@ -66,4 +66,4 @@ jobs:
         if: always()
         uses: vercel/repository-dispatch/actions/status@v1
         with:
-          name: Vercel - kindred-coins: build
+          name: "Vercel - kindred-coins: build"
