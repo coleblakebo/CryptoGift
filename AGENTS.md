@@ -110,6 +110,8 @@ When adding a new holiday:
 - `develop` is the integration branch for upcoming releases.
 - Do not work directly on `main`.
 - Prefer branching from `develop` for feature work.
+- When creating a PR, default the base branch to `develop`.
+- Do not create PRs directly to `main` unless it is a release PR from `develop`.
 - Merge feature branches into `develop` through pull requests.
 - Merge `develop` into `main` when releasing.
 - Pushes to `main` also trigger an automatic GitHub Release workflow.
