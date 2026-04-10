@@ -91,7 +91,7 @@ Create two tables in your Airtable base (`gifts-dev` for local dev and `gifts-pr
 - `main` is the production branch.
 - `develop` is the integration branch for upcoming releases.
 - Create feature branches from `develop`.
-- Open feature pull requests into `develop`.
+- Open feature PRs into `develop`.
 - Open a release pull request from `develop` into `main` when you are ready to ship.
 
 Example branch names:
