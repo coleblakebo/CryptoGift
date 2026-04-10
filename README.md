@@ -12,12 +12,26 @@ A small Next.js app for creating and sharing crypto gift links. KindredCoins let
 npm install
 ```
 
-3. Create a `.env.local` file in the project root:
+3. Set up your environments.
+
+The app separates dev and production tables in a single Airtable base:
+
+- Create two tables: `gifts-dev` and `gifts-prod`.
+- Set their schema to match the [Airtable Fields](#airtable-fields) section below.
+- Update `.env.development` and `.env.production` with your Airtable API key and base ID:
 
 ```env
 AIRTABLE_API_KEY=your_airtable_token
 AIRTABLE_BASE_ID=your_base_id
-AIRTABLE_TABLE=Claims
+```
+
+For local overrides, create `.env.local`:
+
+```env
+# .env.local (local development only, not committed)
+AIRTABLE_API_KEY=your_key_here
+AIRTABLE_BASE_ID=your_base_id
+AIRTABLE_TABLE=gifts-dev
 ```
 
 4. Run the dev server:
@@ -63,7 +77,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 
 ## Airtable Fields
 
-Recommended fields in your `Claims` table:
+Create both `gifts-dev` and `gifts-prod` tables with these recommended fields:
 
 - `giftId`
 - `giftUrl`
@@ -85,6 +99,22 @@ Recommended fields in your `Claims` table:
 - `unopened`: gift was created and is ready to share
 - `claimed`: recipient claimed the gift
 - `sent`: crypto was manually fulfilled by the sender
+
+## Environment Separation
+
+The app automatically uses different Airtable tables based on the environment:
+
+- **Development** (`npm run dev`, Vercel `develop` branch): points to `gifts-dev` table
+- **Production** (`npm run build` + `npm start`, Vercel `main` branch): points to `gifts-prod` table
+
+This keeps test data separate from live gifts.
+
+Environment files:
+- `.env.development` - loaded by Next.js in dev mode
+- `.env.production` - loaded by Next.js in production
+- `.env.local` - local overrides (not committed)
+
+Next.js automatically loads the appropriate file based on `NODE_ENV`, so no manual configuration is needed once you set your Airtable credentials.
 
 ## Git Workflow
 
