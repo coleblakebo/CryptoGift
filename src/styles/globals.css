@@ -77,6 +77,11 @@ h2{margin:0 0 8px 0}
 .error{color:#b00020;margin-bottom:8px}
 .summary{margin-top:12px;padding:10px;border-radius:8px;background:#fff8f6;border:1px solid #ffe6de}
 .summary-success{padding:18px;margin-top:24px}
+.recipient-flow-section{display:grid;justify-items:center;text-align:center;gap:4px}
+.recipient-flow-step{margin:0 0 8px 0;padding:6px 10px;border-radius:999px;background:rgba(255,122,90,.1);color:var(--accent-dark);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.recipient-flow-help{margin:6px 0 16px 0;color:var(--muted);max-width:46ch}
+.secondary-action{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#6d5547;border:1px solid rgba(109,85,71,.28);padding:10px 14px;border-radius:8px;cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease}
+.secondary-action:hover{background:rgba(109,85,71,.08);border-color:rgba(109,85,71,.45);color:#3f3128}
 .gift-form{display:grid;gap:10px}
 .landing-card{position:relative;max-width:980px;background:rgba(8,18,31,.72);backdrop-filter:blur(18px);overflow:hidden;border-color:rgba(123,193,255,.14);box-shadow:0 28px 70px rgba(1,7,18,.42)}
 .create-card{max-width:860px}

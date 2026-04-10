@@ -285,13 +285,15 @@ export default function GiftPage({ gift }: GiftPageProps) {
         )}
 
         {stage === 'reveal' && (
-          <section>
+          <section className="recipient-flow-section">
+            <p className="recipient-flow-step">Step 1 of 2</p>
             <h2>A Gift for {gift.recipientName}</h2>
             {gift.occasion ? <p className="occasion">{gift.occasion}</p> : null}
             <div className="amount">
               {gift.amountDisplay} · {gift.coin}
             </div>
             {gift.messageFromYou ? <p className="message">{gift.messageFromYou}</p> : null}
+            <p className="recipient-flow-help">Ready to claim? Add your wallet details in the next step.</p>
             <button className="primary" onClick={() => setStage('form')}>
               Claim My Gift
             </button>
@@ -299,7 +301,8 @@ export default function GiftPage({ gift }: GiftPageProps) {
         )}
 
         {stage === 'form' && (
-          <section>
+          <section className="recipient-flow-section">
+            <p className="recipient-flow-step">Step 2 of 2</p>
             <h2>Claim your {gift.coin} gift</h2>
             <p className="help">Enter your wallet address, or let the sender know they already have it.</p>
             <form onSubmit={submit}>
@@ -324,8 +327,8 @@ export default function GiftPage({ gift }: GiftPageProps) {
                 <button className="primary" type="submit" disabled={loading}>
                   {loading ? 'Saving...' : 'Submit'}
                 </button>
-                <button type="button" onClick={() => setStage('reveal')}>
-                  Back
+                <button className="secondary-action" type="button" onClick={() => setStage('reveal')}>
+                  Back to Gift Details
                 </button>
               </div>
             </form>
@@ -333,7 +336,7 @@ export default function GiftPage({ gift }: GiftPageProps) {
         )}
 
         {stage === 'success' && (
-          <section>
+          <section className="recipient-flow-section">
             <h2>All set!</h2>
             <p>
               {gift.recipientName}, your gift was claimed. {gift.senderName} is depositing the crypto to your wallet!
