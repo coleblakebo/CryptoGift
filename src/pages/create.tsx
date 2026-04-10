@@ -38,6 +38,7 @@ export default function CreateGiftPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [createdGiftId, setCreatedGiftId] = useState('')
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
 
   const shareUrl = useMemo(() => {
     if (!createdGiftId || typeof window === 'undefined') {
@@ -70,6 +71,19 @@ export default function CreateGiftPage() {
     }))
   }
 
+  const copyShareUrl = async () => {
+    if (!shareUrl) {
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopyState('copied')
+    } catch {
+      setCopyState('error')
+    }
+  }
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
@@ -93,6 +107,7 @@ export default function CreateGiftPage() {
       setCreatedGiftId(payload.gift?.giftId || '')
       setForm(initialState)
       setSlugTouched(false)
+      setCopyState('idle')
       setStage('success')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create gift.')
@@ -265,6 +280,15 @@ export default function CreateGiftPage() {
               </p>
               <div className="summary summary-success create-summary">
                 <input className="input" readOnly value={shareUrl} />
+                <div className="actions create-success-actions">
+                  <button className="secondary-action create-copy-button" type="button" onClick={copyShareUrl}>
+                    {copyState === 'copied'
+                      ? 'Link Copied'
+                      : copyState === 'error'
+                        ? 'Copy Failed'
+                        : 'Copy Link'}
+                  </button>
+                </div>
                 <div className="actions">
                   <button
                     className="primary landing-primary"
@@ -272,6 +296,7 @@ export default function CreateGiftPage() {
                     onClick={() => {
                       setStage('form')
                       setCreatedGiftId('')
+                      setCopyState('idle')
                     }}
                   >
                     Create Another

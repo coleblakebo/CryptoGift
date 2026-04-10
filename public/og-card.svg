@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="KindredCoins social card">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#08111f" />
+      <stop offset="50%" stop-color="#122640" />
+      <stop offset="100%" stop-color="#1d3856" />
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientTransform="translate(200 140) rotate(35) scale(260 260)">
+      <stop offset="0%" stop-color="#7ee7ff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#7ee7ff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientTransform="translate(980 120) rotate(25) scale(220 220)">
+      <stop offset="0%" stop-color="#ffd36e" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#ffd36e" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe58a" />
+      <stop offset="100%" stop-color="#f0a91f" />
+    </linearGradient>
+    <linearGradient id="gift" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff8d72" />
+      <stop offset="100%" stop-color="#df5c3d" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#glowA)" />
+  <rect width="1200" height="630" fill="url(#glowB)" />
+  <rect x="86" y="170" width="520" height="126" rx="28" fill="rgba(7,17,31,0.42)" stroke="rgba(255,255,255,0.08)" />
+  <circle cx="945" cy="325" r="102" fill="url(#coin)" stroke="#fff0b3" stroke-width="10" />
+  <path d="M880 247h130l-20 48H898z" fill="url(#gift)" />
+  <path d="M945 228l27 27h-15v31h-24v-31h-15z" fill="#7ee7ff" />
+  <path d="M918 325h54" stroke="#8a5a00" stroke-width="12" stroke-linecap="round" />
+  <path d="M931 296h28v58h-28z" fill="none" stroke="#8a5a00" stroke-width="12" stroke-linejoin="round" />
+  <text x="124" y="252" fill="#f7fbff" font-size="84" font-weight="700" font-family="Georgia, 'Times New Roman', serif">KindredCoins</text>
+</svg>
