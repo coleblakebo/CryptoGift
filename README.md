@@ -98,6 +98,20 @@ Example branch names:
 - `feature/airtable-automation`
 - `fix/mobile-bunny`
 
+## CI / CD
+
+- GitHub Actions runs `npm test` and `npm run build` on pushes and pull requests.
+- Connect the GitHub repo to Vercel for hosting.
+- Use `main` as the production branch in Vercel.
+- Use feature branches and pull requests for preview deployments.
+- Add your Airtable env vars in Vercel for Production and Preview environments.
+
+Recommended Vercel env vars:
+
+- `AIRTABLE_API_KEY`
+- `AIRTABLE_BASE_ID`
+- `AIRTABLE_TABLE`
+
 ## Notes
 
 - Airtable is the only source of truth.
