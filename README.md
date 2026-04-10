@@ -12,13 +12,31 @@ A small Next.js app for creating and sharing crypto gift links. KindredCoins let
 npm install
 ```
 
-3. Create a `.env.local` file in the project root:
+3. Create a `.env.local` file in the project root.
+
+For the simplest setup, local development can still use one Airtable config:
 
 ```env
 AIRTABLE_API_KEY=your_airtable_token
 AIRTABLE_BASE_ID=your_base_id
 AIRTABLE_TABLE=gifts-dev
 ```
+
+If you want one local file that can switch between separate dev and prod Airtable configs, use:
+
+```env
+AIRTABLE_LOCAL_ENV=dev
+
+AIRTABLE_DEV_API_KEY=your_dev_airtable_token
+AIRTABLE_DEV_BASE_ID=your_dev_base_id
+AIRTABLE_DEV_TABLE=gifts-dev
+
+AIRTABLE_PROD_API_KEY=your_prod_airtable_token
+AIRTABLE_PROD_BASE_ID=your_prod_base_id
+AIRTABLE_PROD_TABLE=gifts-prod
+```
+
+When scoped vars are present, local development defaults to `dev`. Set `AIRTABLE_LOCAL_ENV=prod` if you want to point your local app at the prod Airtable config.
 
 4. Run the dev server:
 
@@ -43,7 +61,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 
 - Creates gift records at `/create`.
 - Shows a themed gift reveal page at `/gift/[id]`.
-- Stores gifts in a single Airtable table.
+- Stores gifts in Airtable using env-driven config.
 - Lets recipients either submit a wallet address or mark that the sender already has it.
 - Supports default, birthday, Easter, and St. Patrick's Day gift experiences.
 
@@ -63,7 +81,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 
 ## Airtable Fields
 
-Create two tables in your Airtable base (`gifts-dev` for local dev and `gifts-prod` for production in Vercel) with these recommended fields:
+Create the same fields in both your dev and prod Airtable setups, whether that means two tables in one base or two separate Airtables:
 
 - `giftId`
 - `giftUrl`
@@ -114,6 +132,10 @@ Recommended Vercel env vars:
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - `AIRTABLE_TABLE`
+
+Vercel should keep using plain `AIRTABLE_*` variables per environment.
+Set Preview to your dev Airtable values and Production to your prod Airtable values in the Vercel project settings.
+The scoped `AIRTABLE_DEV_*` and `AIRTABLE_PROD_*` vars are only needed for local development.
 
 ## Milestones And Releases
 
