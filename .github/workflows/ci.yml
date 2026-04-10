@@ -17,12 +17,8 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  statuses: write
-
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,33 +37,5 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: notify vercel
-        if: ${{ always() && (github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork) }}
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: "Vercel - kindred-coins: test"
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Run production build
         run: npm run build
-
-      - name: notify vercel
-        if: ${{ always() && (github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork) }}
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: "Vercel - kindred-coins: build"
