@@ -66,6 +66,18 @@ Recommended fields in your `Claims` table:
 - `claimed`: recipient claimed the gift
 - `sent`: crypto was manually fulfilled by the sender
 
+## Git Workflow
+
+- Always branch from `main`.
+- Create a feature branch before making changes.
+- Open a pull request back into `main` when the work is ready.
+
+Example branch names:
+
+- `feature/easter-theme`
+- `feature/airtable-automation`
+- `fix/mobile-bunny`
+
 ## Notes
 
 - Airtable is the only source of truth.

@@ -25,6 +25,11 @@ export default function GiftPage({ gift }: GiftPageProps) {
   const occasionText = gift?.occasion?.toLowerCase() || ''
   const isBirthday = occasionText.includes('birthday') || occasionText.includes('bday')
   const isEaster = occasionText.includes('easter')
+  const isStPatricks =
+    occasionText.includes('st. patrick') ||
+    occasionText.includes('st patrick') ||
+    occasionText.includes('patrick') ||
+    occasionText.includes('patty')
   const [stage, setStage] = useState<Stage>(
     gift?.status === 'claimed' || gift?.status === 'sent' ? 'success' : 'wrapped'
   )
@@ -38,11 +43,11 @@ export default function GiftPage({ gift }: GiftPageProps) {
   useEffect(() => {
     if (stage === 'reveal') {
       confetti({
-        particleCount: isBirthday ? 120 : isEaster ? 90 : 80,
-        spread: isBirthday ? 90 : isEaster ? 75 : 60
+        particleCount: isBirthday ? 120 : isStPatricks ? 110 : isEaster ? 90 : 80,
+        spread: isBirthday ? 90 : isStPatricks ? 85 : isEaster ? 75 : 60
       })
     }
-  }, [isBirthday, isEaster, stage])
+  }, [isBirthday, isEaster, isStPatricks, stage])
 
   if (!gift) {
     return <div style={{ padding: 40 }}>Gift not found.</div>
@@ -93,7 +98,13 @@ export default function GiftPage({ gift }: GiftPageProps) {
   return (
     <div
       className={`page-root festive-page ${
-        isBirthday ? 'birthday-page' : isEaster ? 'easter-page' : 'default-gift-page'
+        isBirthday
+          ? 'birthday-page'
+          : isEaster
+            ? 'easter-page'
+            : isStPatricks
+              ? 'stpatricks-page'
+              : 'default-gift-page'
       }`}
     >
       <div className="festive-orb orb-one" />
@@ -136,10 +147,48 @@ export default function GiftPage({ gift }: GiftPageProps) {
           <span className="bunny-nose" />
         </div>
       ) : null}
+      {isStPatricks ? (
+        <div className="stpatricks-scene" aria-hidden="true">
+          <span className="clover clover-one" />
+          <span className="clover clover-two" />
+          <span className="clover clover-three" />
+          <span className="clover clover-four" />
+          <span className="hill hill-left" />
+          <span className="hill hill-right" />
+          <span className="leprechaun leprechaun-bg">
+            <span className="lep-hat" />
+            <span className="lep-face" />
+            <span className="lep-beard" />
+          </span>
+        </div>
+      ) : null}
+      {isStPatricks && (stage === 'reveal' || stage === 'success') ? (
+        <div className="rainbow-burst" aria-hidden="true">
+          <span className="rainbow-arc arc-red" />
+          <span className="rainbow-arc arc-orange" />
+          <span className="rainbow-arc arc-yellow" />
+          <span className="rainbow-arc arc-green" />
+          <span className="rainbow-arc arc-blue" />
+          <span className="rainbow-arc arc-purple" />
+          <span className="rainbow-cloud rainbow-cloud-left" />
+          <span className="rainbow-cloud rainbow-cloud-right" />
+          <span className="leprechaun leprechaun-pop">
+            <span className="lep-hat" />
+            <span className="lep-face" />
+            <span className="lep-beard" />
+          </span>
+        </div>
+      ) : null}
 
       <main
         className={`card gift-card ${
-          isBirthday ? 'birthday-card' : isEaster ? 'easter-card' : 'default-gift-card'
+          isBirthday
+            ? 'birthday-card'
+            : isEaster
+              ? 'easter-card'
+              : isStPatricks
+                ? 'stpatricks-card'
+                : 'default-gift-card'
         }`}
       >
         {stage === 'wrapped' && (
@@ -147,7 +196,8 @@ export default function GiftPage({ gift }: GiftPageProps) {
             <div className="eyebrow">A surprise is waiting</div>
             <h2>Open your CryptoGift</h2>
             <p className="help">
-              {gift.recipientName}, tap the {isEaster ? 'egg' : 'present'} to see what is inside.
+              {gift.recipientName}, tap the{' '}
+              {isEaster ? 'egg' : isStPatricks ? 'pot of gold' : 'present'} to see what is inside.
             </p>
             {isEaster ? (
               <button
@@ -166,6 +216,24 @@ export default function GiftPage({ gift }: GiftPageProps) {
                 <span className="egg-pattern dot-one" />
                 <span className="egg-pattern dot-two" />
                 <span className="egg-highlight" />
+              </button>
+            ) : isStPatricks ? (
+              <button
+                type="button"
+                className="pot-gold-button"
+                onClick={() => setStage('reveal')}
+                aria-label="Open pot of gold"
+              >
+                <span className="pot-handle" />
+                <span className="pot-gold" />
+                <span className="pot-rim" />
+                <span className="pot-body" />
+                <span className="gold-coin coin-one" />
+                <span className="gold-coin coin-two" />
+                <span className="gold-coin coin-three" />
+                <span className="gold-spark spark-one" />
+                <span className="gold-spark spark-two" />
+                <span className="gold-spark spark-three" />
               </button>
             ) : (
               <button

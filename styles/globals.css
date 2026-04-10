@@ -22,7 +22,11 @@ linear-gradient(180deg,#fff8f4 0,#ffe7ef 48%,#ffe0c6 100%)}
 radial-gradient(circle at 18% 18%,rgba(255,247,180,.9) 0,rgba(255,247,180,0) 22%),
 radial-gradient(circle at 82% 16%,rgba(198,244,214,.9) 0,rgba(198,244,214,0) 20%),
 linear-gradient(180deg,#f8fff1 0,#f2ffe7 52%,#fff4d8 100%)}
-.festive-orb,.festive-streamer,.balloon-cluster,.birthday-banner-wall,.easter-garden,.bunny-pop{pointer-events:none}
+.stpatricks-page{background:
+radial-gradient(circle at 20% 16%,rgba(253,231,138,.78) 0,rgba(253,231,138,0) 20%),
+radial-gradient(circle at 82% 18%,rgba(153,232,171,.45) 0,rgba(153,232,171,0) 22%),
+linear-gradient(180deg,#f7fff2 0,#e6f8d8 48%,#cbe99f 100%)}
+.festive-orb,.festive-streamer,.balloon-cluster,.birthday-banner-wall,.easter-garden,.bunny-pop,.stpatricks-scene,.rainbow-burst{pointer-events:none}
 .festive-orb{position:absolute;border-radius:999px;filter:blur(4px);opacity:.8}
 .orb-one{top:8%;left:6%;width:120px;height:120px;background:rgba(255,208,120,.4)}
 .orb-two{top:18%;right:10%;width:160px;height:160px;background:rgba(255,130,130,.22)}
@@ -48,6 +52,7 @@ repeating-linear-gradient(135deg,rgba(255,255,255,.7) 0 10px,rgba(255,170,120,.4
 .default-gift-card{background:rgba(255,255,255,.92);backdrop-filter:blur(10px)}
 .birthday-card{background:rgba(255,252,255,.92);backdrop-filter:blur(12px);border-color:rgba(255,137,172,.28);box-shadow:0 22px 56px rgba(157,72,86,.15)}
 .easter-card{background:rgba(255,255,250,.92);backdrop-filter:blur(10px);border-color:rgba(140,210,132,.28);box-shadow:0 22px 56px rgba(90,143,77,.14)}
+.stpatricks-card{background:rgba(255,255,247,.92);backdrop-filter:blur(11px);border-color:rgba(103,175,85,.3);box-shadow:0 22px 56px rgba(60,111,45,.18)}
 h2{margin:0 0 8px 0}
 .page-title{margin:0 0 10px 0;font-size:2.2rem;line-height:1}
 .page-copy{color:#473b33;margin:0 0 22px 0;max-width:54ch}
@@ -87,6 +92,54 @@ h2{margin:0 0 8px 0}
 .dot-one{left:70px;top:58px;width:20px;height:20px;background:#88c8f7;box-shadow:34px 8px 0 #ffd36e,68px -2px 0 #f39fca}
 .dot-two{left:92px;top:174px;width:16px;height:16px;background:#ffd36e;box-shadow:28px -4px 0 #88d896}
 .egg-highlight{position:absolute;left:70px;top:48px;width:28px;height:86px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.8) 0,rgba(255,255,255,0) 100%);transform:rotate(14deg);filter:blur(1px);opacity:.7}
+.stpatricks-scene{position:absolute;inset:0}
+.hill{position:absolute;bottom:-42px;width:58%;height:190px;border-radius:50%;background:linear-gradient(180deg,#89cf54 0,#5fae3a 100%)}
+.hill-left{left:-10%;transform:rotate(-4deg)}
+.hill-right{right:-8%;background:linear-gradient(180deg,#7cc64a 0,#4e9731 100%)}
+.clover{position:absolute;width:24px;height:24px;opacity:.42}
+.clover::before,.clover::after{content:"";position:absolute;width:14px;height:14px;background:#3f9a39;border-radius:50%}
+.clover::before{left:5px;top:0;box-shadow:-8px 8px 0 #3f9a39,8px 8px 0 #3f9a39}
+.clover::after{left:10px;top:16px;width:3px;height:18px;background:#4b8d32;border-radius:999px;transform:rotate(22deg)}
+.clover-one{left:10%;top:22%}
+.clover-two{left:24%;top:12%;transform:scale(1.2)}
+.clover-three{right:18%;top:24%;transform:scale(.95)}
+.clover-four{right:10%;top:10%;transform:scale(1.1)}
+.pot-gold-button{position:relative;width:220px;height:220px;border:0;background:transparent;cursor:pointer;padding:0;transition:transform .2s ease}
+.pot-gold-button:hover{transform:translateY(-6px) scale(1.03)}
+.pot-handle{position:absolute;left:58px;top:48px;width:104px;height:68px;border:10px solid #2b2b2b;border-bottom:0;border-radius:70px 70px 0 0;opacity:.85}
+.pot-gold{position:absolute;left:60px;top:76px;width:100px;height:34px;background:linear-gradient(180deg,#fff6a6 0,#ffc93b 100%);border-radius:50%;box-shadow:0 0 18px rgba(255,214,71,.45)}
+.pot-rim{position:absolute;left:48px;top:94px;width:124px;height:24px;background:linear-gradient(180deg,#3e3e3e 0,#111 100%);border-radius:999px}
+.pot-body{position:absolute;left:40px;top:104px;width:140px;height:96px;background:linear-gradient(180deg,#4c4c4c 0,#151515 100%);border-radius:26px 26px 44px 44px;box-shadow:0 20px 32px rgba(30,30,30,.22)}
+.gold-coin{position:absolute;width:30px;height:16px;background:linear-gradient(180deg,#ffe888 0,#ffbe24 100%);border-radius:999px;box-shadow:0 3px 0 rgba(255,255,255,.25) inset}
+.coin-one{left:66px;top:66px;transform:rotate(-12deg)}
+.coin-two{left:98px;top:58px;transform:rotate(8deg)}
+.coin-three{left:126px;top:70px;transform:rotate(18deg)}
+.gold-spark{position:absolute;width:14px;height:14px;background:radial-gradient(circle,#fff7c2 0,#ffd54f 55%,rgba(255,213,79,0) 70%);filter:blur(.2px)}
+.spark-one{left:48px;top:74px}
+.spark-two{right:50px;top:54px}
+.spark-three{left:104px;top:40px}
+.rainbow-burst{position:absolute;left:50%;bottom:66px;width:320px;height:220px;transform:translateX(-50%);animation:rainbow-rise .9s ease-out}
+.rainbow-arc{position:absolute;left:50%;bottom:0;border-radius:320px 320px 0 0;border-style:solid;border-bottom:0;transform:translateX(-50%)}
+.arc-red{width:280px;height:180px;border-width:18px;border-color:#ef5f55}
+.arc-orange{width:244px;height:156px;border-width:16px;border-color:#f59b2e}
+.arc-yellow{width:212px;height:136px;border-width:15px;border-color:#ffd54a}
+.arc-green{width:182px;height:116px;border-width:14px;border-color:#61b54b}
+.arc-blue{width:154px;height:98px;border-width:13px;border-color:#4aa4dc}
+.arc-purple{width:128px;height:80px;border-width:12px;border-color:#8e67d8}
+.rainbow-cloud{position:absolute;bottom:-2px;width:62px;height:34px;background:#fffdf5;border-radius:999px;box-shadow:22px 8px 0 #fffdf5,-18px 10px 0 #fffdf5}
+.rainbow-cloud-left{left:38px}
+.rainbow-cloud-right{right:38px}
+.leprechaun{position:absolute}
+.leprechaun-bg{right:9%;bottom:86px;width:100px;height:136px;opacity:.75}
+.leprechaun-pop{left:50%;bottom:8px;width:116px;height:148px;transform:translateX(-50%);animation:leprechaun-pop .9s ease-out}
+.lep-hat{position:absolute;left:18px;top:0;width:80px;height:30px;background:linear-gradient(180deg,#30a23d 0,#126a24 100%);border-radius:10px 10px 4px 4px}
+.lep-hat::before{content:"";position:absolute;left:16px;top:-24px;width:48px;height:34px;background:linear-gradient(180deg,#3eb84d 0,#17742a 100%);border-radius:10px 10px 0 0}
+.lep-hat::after{content:"";position:absolute;left:28px;top:10px;width:20px;height:10px;border:4px solid #f2c445;border-radius:4px}
+.lep-face{position:absolute;left:26px;top:30px;width:64px;height:60px;background:linear-gradient(180deg,#ffe2be 0,#f7c892 100%);border-radius:50%}
+.lep-face::before,.lep-face::after{content:"";position:absolute;top:24px;width:8px;height:10px;background:#3a2b1a;border-radius:999px}
+.lep-face::before{left:18px}
+.lep-face::after{right:18px}
+.lep-beard{position:absolute;left:20px;top:72px;width:76px;height:54px;background:linear-gradient(180deg,#ff9739 0,#d85f16 100%);clip-path:polygon(10% 0,90% 0,100% 40%,82% 100%,18% 100%,0 40%)}
 .bunny-pop{position:absolute;left:50%;bottom:72px;width:170px;height:190px;transform:translateX(-50%);animation:bunny-pop-up .8s ease-out}
 .bunny-head{position:absolute;left:35px;bottom:30px;width:100px;height:92px;background:linear-gradient(180deg,#fffdf8 0,#f4eee4 100%);border-radius:50%;box-shadow:0 14px 28px rgba(119,98,84,.12)}
 .bunny-ear{position:absolute;bottom:108px;width:34px;height:92px;background:linear-gradient(180deg,#fffdf8 0,#f4eee4 100%);border-radius:50px 50px 24px 24px}
@@ -125,6 +178,16 @@ h2{margin:0 0 8px 0}
   100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
 }
 
+@keyframes rainbow-rise{
+  0%{transform:translateX(-50%) translateY(36px) scale(.9);opacity:0}
+  100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+}
+
+@keyframes leprechaun-pop{
+  0%{transform:translateX(-50%) translateY(28px) scale(.82);opacity:0}
+  100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+}
+
 @media (max-width:520px){
   .card{padding:20px;border-radius:10px}
   .page-title{font-size:1.8rem}
@@ -134,6 +197,17 @@ h2{margin:0 0 8px 0}
   .gift-box-base{left:22px;top:76px;width:136px;height:92px}
   .gift-box-ribbon-vertical{left:83px;top:42px;height:126px}
   .gift-box-ribbon-horizontal{left:22px;top:103px;width:136px}
+  .pot-gold-button{width:188px;height:188px}
+  .pot-handle{left:48px;top:42px;width:92px;height:60px}
+  .pot-gold{left:54px;top:68px;width:82px;height:30px}
+  .pot-rim{left:44px;top:86px;width:104px}
+  .pot-body{left:34px;top:94px;width:122px;height:84px}
+  .coin-one{left:56px;top:60px}
+  .coin-two{left:84px;top:54px}
+  .coin-three{left:110px;top:64px}
+  .spark-one{left:40px;top:66px}
+  .spark-two{right:42px;top:50px}
+  .spark-three{left:88px;top:34px}
   .easter-egg-button{width:190px;height:220px}
   .egg-shadow{left:34px;width:122px}
   .egg-shell{left:34px;width:122px}
@@ -154,4 +228,23 @@ h2{margin:0 0 8px 0}
   .bunny-eye.left{left:54px}
   .bunny-eye.right{right:54px}
   .bunny-nose{bottom:50px;width:14px;height:10px}
+  .rainbow-burst{width:246px;height:172px;bottom:56px}
+  .arc-red{width:214px;height:136px;border-width:14px}
+  .arc-orange{width:186px;height:118px;border-width:13px}
+  .arc-yellow{width:160px;height:102px;border-width:12px}
+  .arc-green{width:138px;height:88px;border-width:11px}
+  .arc-blue{width:118px;height:74px;border-width:10px}
+  .arc-purple{width:98px;height:62px;border-width:9px}
+  .rainbow-cloud{width:48px;height:26px;box-shadow:16px 6px 0 #fffdf5,-14px 8px 0 #fffdf5}
+  .rainbow-cloud-left{left:30px}
+  .rainbow-cloud-right{right:30px}
+  .leprechaun-pop{width:96px;height:126px}
+  .leprechaun-bg{right:5%;bottom:92px;width:82px;height:116px}
+  .lep-hat{left:16px;width:64px;height:24px}
+  .lep-hat::before{left:14px;top:-20px;width:38px;height:28px}
+  .lep-hat::after{left:22px;top:8px;width:16px;height:8px}
+  .lep-face{left:22px;top:26px;width:52px;height:50px}
+  .lep-face::before{left:14px}
+  .lep-face::after{right:14px}
+  .lep-beard{left:18px;top:62px;width:60px;height:46px}
 }
