@@ -17,7 +17,7 @@ npm install
 ```env
 AIRTABLE_API_KEY=your_airtable_token
 AIRTABLE_BASE_ID=your_base_id
-AIRTABLE_TABLE=Claims
+AIRTABLE_TABLE=gifts-dev
 ```
 
 4. Run the dev server:
@@ -63,7 +63,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 
 ## Airtable Fields
 
-Recommended fields in your `Claims` table:
+Create two tables in your Airtable base (`gifts-dev` for local dev and `gifts-prod` for production in Vercel) with these recommended fields:
 
 - `giftId`
 - `giftUrl`
