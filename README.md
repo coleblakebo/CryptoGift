@@ -38,6 +38,17 @@ AIRTABLE_PROD_TABLE=gifts-prod
 
 When scoped vars are present, local development defaults to `dev`. Set `AIRTABLE_LOCAL_ENV=prod` if you want to point your local app at the prod Airtable config.
 
+Optional email automation uses Resend from the server after a gift is created:
+
+```env
+RESEND_API_KEY=your_resend_api_key
+EMAIL_FROM=KindredCoins <gifts@kindredcoins.com>
+EMAIL_REPLY_TO=hello@kindredcoins.com
+NEXT_PUBLIC_SITE_URL=https://kindredcoins.com
+```
+
+If `RESEND_API_KEY` or `EMAIL_FROM` is missing, gift creation still works and the sender can copy the share link manually.
+
 4. Run the dev server:
 
 ```bash
@@ -63,6 +74,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 - Shows a themed gift reveal page at `/gift/[id]`.
 - Stores gifts in Airtable using env-driven config.
 - Lets recipients either submit a wallet address or mark that the sender already has it.
+- Can email the recipient their gift link from the server when Resend env vars are configured.
 - Supports default, birthday, Easter, and St. Patrick's Day gift experiences.
 
 ## Repo Layout
@@ -133,6 +145,10 @@ Recommended Vercel env vars:
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - `AIRTABLE_TABLE`
+- `NEXT_PUBLIC_SITE_URL`
+- `RESEND_API_KEY`
+- `EMAIL_FROM`
+- `EMAIL_REPLY_TO`
 
 Vercel should keep using plain `AIRTABLE_*` variables per environment.
 Set Preview to your dev Airtable values and Production to your prod Airtable values in the Vercel project settings.

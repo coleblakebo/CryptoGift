@@ -19,6 +19,11 @@ type FormState = {
   website: string
 }
 
+type EmailResult = {
+  sent: boolean
+  reason?: string
+}
+
 const holidayOptions = ['Birthday', 'Easter', "St. Patrick's Day"]
 
 const initialState: FormState = {
@@ -43,6 +48,7 @@ export default function CreateGiftPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [createdGiftId, setCreatedGiftId] = useState('')
+  const [emailResult, setEmailResult] = useState<EmailResult | null>(null)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
 
   const shareUrl = useMemo(() => {
@@ -100,13 +106,18 @@ export default function CreateGiftPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       })
-      const payload = (await response.json()) as { error?: string; gift?: { giftId: string } }
+      const payload = (await response.json()) as {
+        error?: string
+        gift?: { giftId: string }
+        email?: EmailResult
+      }
 
       if (!response.ok) {
         throw new Error(payload.error || 'Failed to create gift.')
       }
 
       setCreatedGiftId(payload.gift?.giftId || '')
+      setEmailResult(payload.email || null)
       setForm(initialState)
       setSlugTouched(false)
       setCopyState('idle')
@@ -299,6 +310,11 @@ export default function CreateGiftPage() {
               <p className="create-copy">
                 This record is ready to share and will flip to claimed when the recipient submits.
               </p>
+              <p className={`create-email-status ${emailResult?.sent ? 'email-sent' : 'email-manual'}`}>
+                {emailResult?.sent
+                  ? 'Email sent to the recipient.'
+                  : 'Email was not sent automatically. Copy and share the link below.'}
+              </p>
               <div className="summary summary-success create-summary">
                 <input className="input" readOnly value={shareUrl} />
                 <div className="actions create-success-actions">
@@ -317,6 +333,7 @@ export default function CreateGiftPage() {
                     onClick={() => {
                       setStage('form')
                       setCreatedGiftId('')
+                      setEmailResult(null)
                       setCopyState('idle')
                     }}
                   >

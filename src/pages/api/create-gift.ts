@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { createGift, CreateGiftInput } from '../../lib/gifts'
+import { sendGiftCreatedEmail } from '../../lib/email'
 import {
   isValidEmail,
   normalizeAmountDisplay,
@@ -69,7 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const gift = await createGift(payload)
-    return res.status(200).json({ ok: true, gift })
+    const email = await sendGiftCreatedEmail(gift)
+    return res.status(200).json({ ok: true, gift, email })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to create gift.'
     const statusCode = message.includes('already exists') ? 409 : 500
