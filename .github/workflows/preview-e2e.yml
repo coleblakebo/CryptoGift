@@ -32,6 +32,34 @@ jobs:
           BASE_URL: ${{ github.event.deployment_status.environment_url }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
+      - name: Clean up preview test gifts
+        if: always()
+        run: |
+          node -e "
+          const { Client } = require('pg');
+          const connectionString = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+          if (!connectionString) {
+            throw new Error('Missing preview Postgres connection string for cleanup.');
+          }
+          const client = new Client({ connectionString });
+          (async () => {
+            await client.connect();
+            const result = await client.query(\"DELETE FROM gifts WHERE gift_id LIKE 'e2e-%'\");
+            console.log(\`Deleted \${result.rowCount} preview test gift rows.\`);
+            await client.end();
+          })().catch(async (error) => {
+            console.error(error);
+            try {
+              await client.end();
+            } catch {}
+            process.exit(1);
+          });
+          "
+        env:
+          POSTGRES_URL_NON_POOLING: ${{ secrets.POSTGRES_URL_NON_POOLING }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
