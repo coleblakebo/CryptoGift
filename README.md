@@ -151,6 +151,12 @@ Recommended Vercel env vars:
 - Automatic releases currently use tags like `release-YYYYMMDD-HHMMSS-<sha>`.
 - If you want formal semantic versions later, you can switch this to `v0.1.0`, `v0.2.0`, and `v0.2.1`.
 
+## Backlog
+
+- UI cleanup: replace abstract/generated shapes with real branded imagery, polished gift visuals, and occasion-specific assets that feel intentional on mobile and desktop.
+- Payments architecture: evolve the app from manual fulfillment into a pass-through purchase and payout flow where the sender funds the gift, the recipient claims with a wallet address, and a partner handles actual crypto distribution.
+- Funding options: evaluate both card/fiat checkout and direct wallet-funded send flows for how a sender can fund a gift.
+
 ## Notes
 
 - Postgres is the only source of truth.
