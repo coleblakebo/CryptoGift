@@ -38,7 +38,7 @@ AIRTABLE_PROD_TABLE=gifts-prod
 
 When scoped vars are present, local development defaults to `dev`. Set `AIRTABLE_LOCAL_ENV=prod` if you want to point your local app at the prod Airtable config.
 
-Optional email automation uses Resend from the server after a gift is created:
+Optional email automation uses Resend from the server after a gift is created or claimed:
 
 ```env
 RESEND_API_KEY=your_resend_api_key
@@ -47,7 +47,7 @@ EMAIL_REPLY_TO=hello@kindredcoins.com
 NEXT_PUBLIC_SITE_URL=https://kindredcoins.com
 ```
 
-If `RESEND_API_KEY` or `EMAIL_FROM` is missing, gift creation still works and the sender can copy the share link manually.
+If `RESEND_API_KEY` or `EMAIL_FROM` is missing, gift creation and claiming still work. The sender can copy the share link manually and claim confirmation just skips the email step.
 
 4. Run the dev server:
 
@@ -74,7 +74,7 @@ http://localhost:3000/gift/izzy-d-easter-2026
 - Shows a themed gift reveal page at `/gift/[id]`.
 - Stores gifts in Airtable using env-driven config.
 - Lets recipients either submit a wallet address or mark that the sender already has it.
-- Can email the recipient their gift link from the server when Resend env vars are configured.
+- Can email the recipient their gift link on create and email the sender when the gift is claimed.
 - Supports default, birthday, Easter, and St. Patrick's Day gift experiences.
 
 ## Repo Layout
