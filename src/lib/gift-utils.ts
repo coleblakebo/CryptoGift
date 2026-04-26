@@ -36,8 +36,3 @@ export function isValidEmail(value: string) {
 export function toGiftStatus(value: unknown): GiftStatus {
   return value === 'claimed' || value === 'sent' ? value : 'unopened'
 }
-
-export function buildGiftUrl(origin: string | undefined, giftId: string) {
-  const normalizedOrigin = origin?.replace(/\/+$/, '') || ''
-  return normalizedOrigin ? `${normalizedOrigin}/gift/${giftId}` : null
-}

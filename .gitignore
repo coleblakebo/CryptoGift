@@ -4,3 +4,4 @@
 /coverage
 /vitest-report
 /.vscode
+.vercel

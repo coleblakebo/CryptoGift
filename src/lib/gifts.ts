@@ -1,11 +1,26 @@
-import { loadLocalEnv } from './env'
-import { buildGiftUrl, toGiftStatus } from './gift-utils'
+import { query, withTransaction } from './db'
+import { toGiftStatus } from './gift-utils'
+
+type GiftRow = {
+  gift_id: string
+  recipient_name: string
+  recipient_email: string
+  sender_name: string
+  sender_email: string
+  occasion: string
+  coin: string
+  amount_display: string
+  message_from_you: string
+  status: string
+  wallet_address: string | null
+  claimed_at: Date | string | null
+  created_at: Date | string | null
+}
 
 export type GiftStatus = 'unopened' | 'claimed' | 'sent'
 
 export type Gift = {
   giftId: string
-  giftUrl?: string | null
   recipientName: string
   recipientEmail: string
   senderName: string
@@ -22,7 +37,6 @@ export type Gift = {
 
 export type CreateGiftInput = {
   giftId: string
-  origin?: string
   recipientName: string
   recipientEmail: string
   senderName: string
@@ -33,220 +47,139 @@ export type CreateGiftInput = {
   messageFromYou: string
 }
 
-function getAirtableConfig() {
-  loadLocalEnv()
-
-  const apiKey = process.env.AIRTABLE_API_KEY
-  const baseId = process.env.AIRTABLE_BASE_ID
-  const tableName = process.env.AIRTABLE_TABLE
-
-  return {
-    apiKey,
-    baseId,
-    tableName,
-    enabled: Boolean(apiKey && baseId && tableName)
+function toIsoString(value: Date | string | null) {
+  if (!value) {
+    return null
   }
+
+  if (value instanceof Date) {
+    return value.toISOString()
+  }
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toISOString()
 }
 
-function mapAirtableFieldsToGift(fields: Record<string, unknown>): Gift {
-  const status = toGiftStatus(fields.status)
+export function mapGiftRowToGift(row: GiftRow): Gift {
+  const status = toGiftStatus(row.status)
 
   return {
-    giftId: String(fields.giftId || ''),
-    giftUrl: fields.giftUrl ? String(fields.giftUrl) : null,
-    recipientName: String(fields.recipientName || ''),
-    recipientEmail: String(fields.recipientEmail || ''),
-    senderName: String(fields.senderName || 'Uncle Cole'),
-    senderEmail: String(fields.senderEmail || ''),
-    occasion: String(fields.occasion || ''),
-    coin: String(fields.coin || ''),
-    amountDisplay: String(fields.amountDisplay || ''),
-    messageFromYou: String(fields.messageFromYou || ''),
+    giftId: row.gift_id,
+    recipientName: row.recipient_name,
+    recipientEmail: row.recipient_email,
+    senderName: row.sender_name || 'Uncle Cole',
+    senderEmail: row.sender_email,
+    occasion: row.occasion,
+    coin: row.coin,
+    amountDisplay: row.amount_display,
+    messageFromYou: row.message_from_you,
     status,
-    walletAddress: fields.walletAddress ? String(fields.walletAddress) : null,
-    claimedAt: fields.claimedAt ? String(fields.claimedAt) : null,
-    createdAt: fields.createdAt ? String(fields.createdAt) : null
+    walletAddress: row.wallet_address,
+    claimedAt: toIsoString(row.claimed_at),
+    createdAt: toIsoString(row.created_at)
   }
 }
 
-async function fetchAirtableGiftRecordById(giftId: string) {
-  const config = getAirtableConfig()
-  if (!config.enabled) {
-    return null
-  }
-
-  const formula = `({giftId}='${giftId.replace(/'/g, "\\'")}')`
-  const url =
-    `https://api.airtable.com/v0/${config.baseId}/${encodeURIComponent(config.tableName || '')}` +
-    `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`
-    }
-  })
-
-  if (!response.ok) {
-    throw new Error(`Airtable fetch failed with ${response.status}`)
-  }
-
-  const payload = (await response.json()) as {
-    records?: Array<{ id: string; fields: Record<string, unknown> }>
-  }
-  const record = payload.records?.[0]
-  if (!record) {
-    return null
-  }
-
-  return {
-    recordId: record.id,
-    gift: mapAirtableFieldsToGift(record.fields)
-  }
-}
+const giftColumns = `
+  gift_id,
+  recipient_name,
+  recipient_email,
+  sender_name,
+  sender_email,
+  occasion,
+  coin,
+  amount_display,
+  message_from_you,
+  status,
+  wallet_address,
+  claimed_at,
+  created_at
+`
 
 export async function getGiftById(giftId: string) {
-  const config = getAirtableConfig()
-  if (!config.enabled) {
-    throw new Error('Airtable is not configured.')
-  }
+  const result = await query<GiftRow>(
+    `SELECT ${giftColumns}
+    FROM gifts
+    WHERE gift_id = $1`,
+    [giftId]
+  )
 
-  const airtableRecord = await fetchAirtableGiftRecordById(giftId)
-  return airtableRecord?.gift || null
+  return result.rows[0] ? mapGiftRowToGift(result.rows[0]) : null
 }
 
 export async function createGift(input: CreateGiftInput) {
-  const config = getAirtableConfig()
-  if (!config.enabled) {
-    throw new Error('Airtable is not configured.')
-  }
-
-  const existing = await getGiftById(input.giftId)
-  if (existing) {
-    throw new Error('A gift with that URL slug already exists.')
-  }
-
-  const now = new Date().toISOString()
-  const giftUrl = buildGiftUrl(input.origin, input.giftId)
-  const gift: Gift = {
-    ...input,
-    giftUrl,
-    status: 'unopened',
-    createdAt: now
-  }
-
-  const fields = {
-    giftId: gift.giftId,
-    giftUrl: gift.giftUrl,
-    recipientName: gift.recipientName,
-    recipientEmail: gift.recipientEmail,
-    senderName: gift.senderName,
-    senderEmail: gift.senderEmail,
-    occasion: gift.occasion,
-    coin: gift.coin,
-    amountDisplay: gift.amountDisplay,
-    messageFromYou: gift.messageFromYou,
-    status: gift.status,
-    createdAt: gift.createdAt
-  }
-
-  let response = await fetch(
-    `https://api.airtable.com/v0/${config.baseId}/${encodeURIComponent(config.tableName || '')}`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fields })
-    }
-  )
-
-  if (!response.ok) {
-    const text = await response.text()
-
-    if (
-      (text.includes('senderEmail') || text.includes('giftUrl')) &&
-      text.includes('Unknown field name')
-    ) {
-      const fallbackFields = { ...fields }
-      if (text.includes('senderEmail')) {
-        delete fallbackFields.senderEmail
-      }
-      if (text.includes('giftUrl')) {
-        delete fallbackFields.giftUrl
-      }
-      response = await fetch(
-        `https://api.airtable.com/v0/${config.baseId}/${encodeURIComponent(config.tableName || '')}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${config.apiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ fields: fallbackFields })
-        }
+  try {
+    const result = await query<GiftRow>(
+      `INSERT INTO gifts (
+        gift_id,
+        recipient_name,
+        recipient_email,
+        sender_name,
+        sender_email,
+        occasion,
+        coin,
+        amount_display,
+        message_from_you,
+        status
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, 'unopened'
       )
-    } else {
-      throw new Error(`Airtable create failed: ${response.status} ${text}`)
+      RETURNING ${giftColumns}`,
+      [
+        input.giftId,
+        input.recipientName,
+        input.recipientEmail,
+        input.senderName,
+        input.senderEmail,
+        input.occasion,
+        input.coin,
+        input.amountDisplay,
+        input.messageFromYou
+      ]
+    )
+
+    return mapGiftRowToGift(result.rows[0])
+  } catch (error) {
+    const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : ''
+    if (code === '23505') {
+      throw new Error('A gift with that URL slug already exists.')
     }
-  }
 
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`Airtable create failed: ${response.status} ${text}`)
+    throw error
   }
-
-  return gift
 }
 
 export async function claimGift(giftId: string, walletAddress: string | null) {
-  const existing = await getGiftById(giftId)
-  if (!existing) {
-    throw new Error('Gift not found.')
-  }
-  if (existing.status !== 'unopened') {
-    throw new Error(`Gift already ${existing.status}.`)
-  }
+  return withTransaction(async client => {
+    const existingResult = await client.query<GiftRow>(
+      `SELECT ${giftColumns}
+      FROM gifts
+      WHERE gift_id = $1
+      FOR UPDATE`,
+      [giftId]
+    )
 
-  const updatedGift: Gift = {
-    ...existing,
-    walletAddress,
-    claimedAt: new Date().toISOString(),
-    status: 'claimed'
-  }
-
-  const config = getAirtableConfig()
-  if (!config.enabled) {
-    throw new Error('Airtable is not configured.')
-  }
-
-  const airtableRecord = await fetchAirtableGiftRecordById(giftId)
-  if (!airtableRecord) {
-    throw new Error('Gift not found in Airtable.')
-  }
-
-  const response = await fetch(
-    `https://api.airtable.com/v0/${config.baseId}/${encodeURIComponent(config.tableName || '')}/${airtableRecord.recordId}`,
-    {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fields: {
-          walletAddress: updatedGift.walletAddress,
-          claimedAt: updatedGift.claimedAt,
-          status: updatedGift.status
-        }
-      })
+    const existingRow = existingResult.rows[0]
+    if (!existingRow) {
+      throw new Error('Gift not found.')
     }
-  )
 
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`Airtable claim update failed: ${response.status} ${text}`)
-  }
+    const existing = mapGiftRowToGift(existingRow)
+    if (existing.status !== 'unopened') {
+      throw new Error(`Gift already ${existing.status}.`)
+    }
 
-  return updatedGift
+    const updatedResult = await client.query<GiftRow>(
+      `UPDATE gifts
+      SET
+        wallet_address = $2,
+        claimed_at = NOW(),
+        status = 'claimed'
+      WHERE gift_id = $1
+      RETURNING ${giftColumns}`,
+      [giftId, walletAddress]
+    )
+
+    return mapGiftRowToGift(updatedResult.rows[0])
+  })
 }

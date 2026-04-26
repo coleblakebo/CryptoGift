@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  buildGiftUrl,
   isValidEmail,
   normalizeAmountDisplay,
   normalizeEmail,
@@ -40,15 +39,5 @@ describe('gift utils', () => {
     expect(toGiftStatus('sent')).toBe('sent')
     expect(toGiftStatus('created')).toBe('unopened')
     expect(toGiftStatus(undefined)).toBe('unopened')
-  })
-
-  it('builds stable gift urls from the current origin', () => {
-    expect(buildGiftUrl('https://demo.trycloudflare.com', 'izzy-bday-2026')).toBe(
-      'https://demo.trycloudflare.com/gift/izzy-bday-2026'
-    )
-    expect(buildGiftUrl('https://demo.trycloudflare.com/', 'izzy-bday-2026')).toBe(
-      'https://demo.trycloudflare.com/gift/izzy-bday-2026'
-    )
-    expect(buildGiftUrl('', 'izzy-bday-2026')).toBeNull()
   })
 })

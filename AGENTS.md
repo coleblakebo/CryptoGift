@@ -7,10 +7,10 @@ KindredCoins is a small Next.js Pages Router app for creating themed crypto gift
 Core flow:
 
 1. A sender creates a gift at `/create`.
-2. The app stores the gift in Airtable.
+2. The app stores the gift in Postgres.
 3. The sender shares `/gift/[giftId]`.
 4. The recipient opens the themed gift page and claims it.
-5. The Airtable record flips from `unopened` to `claimed`.
+5. The Postgres record flips from `unopened` to `claimed`.
 6. Crypto is fulfilled manually outside the app.
 
 ## Stack
@@ -18,7 +18,7 @@ Core flow:
 - Next.js 13 Pages Router
 - React 18
 - TypeScript
-- Airtable as the only source of truth
+- Postgres as the only source of truth
 - Plain CSS in `src/styles/globals.css`
 
 ## Important Files
@@ -36,7 +36,10 @@ Core flow:
   Validates claim submissions and updates status.
 
 - `src/lib/gifts.ts`
-  Airtable read/write logic and gift mapping.
+  Postgres read/write logic and gift mapping.
+
+- `src/lib/db.ts`
+  Shared Postgres pool and transaction helpers.
 
 - `src/lib/env.ts`
   Loads `.env.local` during local development.
@@ -47,30 +50,14 @@ Core flow:
 - `tests/unit`
   Unit tests for shared logic.
 
-## Airtable
+## Postgres
 
-The app expects one Airtable table, currently configured via:
+The app expects one Postgres database, currently configured via:
 
-- `AIRTABLE_API_KEY`
-- `AIRTABLE_BASE_ID`
-- `AIRTABLE_TABLE`
+- `POSTGRES_URL`
+- `POSTGRES_URL_NON_POOLING`
 
-Recommended Airtable fields:
-
-- `giftId`
-- `giftUrl`
-- `recipientName`
-- `recipientEmail`
-- `senderName`
-- `senderEmail`
-- `occasion`
-- `coin`
-- `amountDisplay`
-- `messageFromYou`
-- `status`
-- `walletAddress`
-- `claimedAt`
-- `createdAt`
+The repo includes [sql/init.sql](/Users/coleblakeborough/Projects/KindredCoins/sql/init.sql:1) to create the `gifts` table.
 
 Status lifecycle:
 
@@ -78,7 +65,7 @@ Status lifecycle:
 - `claimed`
 - `sent`
 
-`giftId` is the canonical identifier. `giftUrl` is helpful but secondary because domains can vary in development.
+`giftId` is the canonical identifier. Full gift URLs should be derived at runtime because domains can vary in development.
 
 ## Theming Rules
 
@@ -103,6 +90,8 @@ When adding a new holiday:
 - Build-check with `npm run build`.
 - Restart the dev server after changing `.env.local`.
 - Unsaved `.env.local` changes will not be visible to the app.
+- Email automation is server-side and optional. It uses `RESEND_API_KEY`, `EMAIL_FROM`, optional `EMAIL_REPLY_TO`, and `NEXT_PUBLIC_SITE_URL`.
+- Gift creation and claim submission should still succeed if email is not configured or if the email provider rejects a send.
 
 ## Git Workflow
 
@@ -126,8 +115,8 @@ Suggested branch names:
 ## Change Guidance
 
 - Preserve the sender/recipient creation flow unless explicitly changing product behavior.
-- Preserve Airtable as the only source of truth.
-- Do not reintroduce local JSON storage.
+- Preserve Postgres as the only source of truth.
+- Do not reintroduce Airtable or local JSON storage.
 - Keep gift pages fun, clear, and mobile-friendly.
 - Treat claimed and sent gifts as closed states.
 - Be careful with optional fields returned through `getServerSideProps`; use `null` instead of `undefined` for serialized data.

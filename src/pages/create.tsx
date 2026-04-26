@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { slugify } from '../lib/gift-utils'
+import { buildAbsoluteUrl, getSiteUrl } from '../lib/site'
 
 type Stage = 'form' | 'success'
 
@@ -15,6 +16,12 @@ type FormState = {
   amountDisplay: string
   messageFromYou: string
   giftId: string
+  website: string
+}
+
+type EmailResult = {
+  sent: boolean
+  reason?: string
 }
 
 const holidayOptions = ['Birthday', 'Easter', "St. Patrick's Day"]
@@ -28,16 +35,20 @@ const initialState: FormState = {
   coin: 'BTC',
   amountDisplay: '',
   messageFromYou: '',
-  giftId: ''
+  giftId: '',
+  website: ''
 }
 
 export default function CreateGiftPage() {
+  const pageUrl = buildAbsoluteUrl('/create', getSiteUrl())
+  const ogImageUrl = buildAbsoluteUrl('/og-card.svg', getSiteUrl())
   const [stage, setStage] = useState<Stage>('form')
   const [form, setForm] = useState<FormState>(initialState)
   const [slugTouched, setSlugTouched] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [createdGiftId, setCreatedGiftId] = useState('')
+  const [emailResult, setEmailResult] = useState<EmailResult | null>(null)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
 
   const shareUrl = useMemo(() => {
@@ -93,18 +104,20 @@ export default function CreateGiftPage() {
       const response = await fetch('/api/create-gift', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          origin: typeof window === 'undefined' ? '' : window.location.origin
-        })
+        body: JSON.stringify(form)
       })
-      const payload = (await response.json()) as { error?: string; gift?: { giftId: string } }
+      const payload = (await response.json()) as {
+        error?: string
+        gift?: { giftId: string }
+        email?: EmailResult
+      }
 
       if (!response.ok) {
         throw new Error(payload.error || 'Failed to create gift.')
       }
 
       setCreatedGiftId(payload.gift?.giftId || '')
+      setEmailResult(payload.email || null)
       setForm(initialState)
       setSlugTouched(false)
       setCopyState('idle')
@@ -129,6 +142,12 @@ export default function CreateGiftPage() {
           property="og:description"
           content="Create a KindredCoins gift link, personalize the occasion, and share it with a recipient for manual crypto fulfillment."
         />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="KindredCoins social card" />
+        <meta name="twitter:image" content={ogImageUrl} />
       </Head>
       <div className="page-root landing-page create-page">
         <div className="landing-glow glow-one" />
@@ -259,6 +278,19 @@ export default function CreateGiftPage() {
                 />
               </label>
 
+              <div className="bot-field" aria-hidden="true">
+                <label>
+                  <span>Website</span>
+                  <input
+                    className="input"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.website}
+                    onChange={(event) => updateField('website', event.target.value)}
+                  />
+                </label>
+              </div>
+
               {error ? <div className="error">{error}</div> : null}
 
               <div className="actions">
@@ -278,6 +310,11 @@ export default function CreateGiftPage() {
               <p className="create-copy">
                 This record is ready to share and will flip to claimed when the recipient submits.
               </p>
+              <p className={`create-email-status ${emailResult?.sent ? 'email-sent' : 'email-manual'}`}>
+                {emailResult?.sent
+                  ? 'Email sent to the recipient.'
+                  : 'Email was not sent automatically. Copy and share the link below.'}
+              </p>
               <div className="summary summary-success create-summary">
                 <input className="input" readOnly value={shareUrl} />
                 <div className="actions create-success-actions">
@@ -296,6 +333,7 @@ export default function CreateGiftPage() {
                     onClick={() => {
                       setStage('form')
                       setCreatedGiftId('')
+                      setEmailResult(null)
                       setCopyState('idle')
                     }}
                   >

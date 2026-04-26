@@ -1,19 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { createGift, CreateGiftInput } from '../../lib/gifts'
+import { sendGiftCreatedEmail } from '../../lib/email'
 import {
   isValidEmail,
   normalizeAmountDisplay,
   normalizeEmail,
   normalizeText
 } from '../../lib/gift-utils'
+import { checkRateLimit, getRequestIp } from '../../lib/rate-limit'
+
+type CreateGiftRequest = Partial<CreateGiftInput> & {
+  website?: string
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
 
-  const body = req.body as Partial<CreateGiftInput>
+  const ip = getRequestIp(req)
+  const rateLimit = checkRateLimit(`create-gift:${ip}`, {
+    limit: 6,
+    windowMs: 15 * 60 * 1000
+  })
+
+  if (!rateLimit.allowed) {
+    res.setHeader('Retry-After', String(rateLimit.retryAfterSeconds))
+    return res.status(429).json({ error: 'Too many gift creation attempts. Please try again later.' })
+  }
+
+  const body = req.body as CreateGiftRequest
+  const website = normalizeText(body.website)
+  if (website) {
+    return res.status(400).json({ error: 'Failed to create gift.' })
+  }
+
   const payload: CreateGiftInput = {
     giftId: normalizeText(body.giftId),
     recipientName: normalizeText(body.recipientName),
@@ -23,8 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     occasion: normalizeText(body.occasion),
     coin: normalizeText(body.coin).toUpperCase(),
     amountDisplay: normalizeAmountDisplay(body.amountDisplay),
-    messageFromYou: normalizeText(body.messageFromYou),
-    origin: normalizeText(body.origin)
+    messageFromYou: normalizeText(body.messageFromYou)
   }
 
   if (
@@ -49,7 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const gift = await createGift(payload)
-    return res.status(200).json({ ok: true, gift })
+    const email = await sendGiftCreatedEmail(gift)
+    return res.status(200).json({ ok: true, gift, email })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to create gift.'
     const statusCode = message.includes('already exists') ? 409 : 500
