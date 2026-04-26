@@ -5,18 +5,10 @@ on:
 
 jobs:
   playwright:
-    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
+    if: github.event.deployment.environment == 'Preview' && github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print deployment event context
-        run: |
-          echo "deployment.ref=${{ github.event.deployment.ref }}"
-          echo "deployment.environment=${{ github.event.deployment.environment }}"
-          echo "deployment_status.environment=${{ github.event.deployment_status.environment }}"
-          echo "deployment_status.state=${{ github.event.deployment_status.state }}"
-          echo "deployment_status.environment_url=${{ github.event.deployment_status.environment_url }}"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
