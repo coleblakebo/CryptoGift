@@ -4,7 +4,7 @@ test('homepage and create page load', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: 'Send Crypto with a fun twist.' })).toBeVisible()
-  await page.getByRole('link', { name: 'Create a Gift →' }).click()
+  await page.getByRole('link', { name: 'Create a Gift' }).click()
 
   await expect(page.getByRole('heading', { name: 'Create a new gift' })).toBeVisible()
   await expect(page.getByText('KindredCoins Studio')).toBeVisible()

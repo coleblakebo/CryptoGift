@@ -5,7 +5,7 @@ on:
 
 jobs:
   playwright:
-    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
+    if: github.event.deployment.ref == 'develop' && github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
     runs-on: ubuntu-latest
 
     steps:
