@@ -116,7 +116,7 @@ Suggested branch names:
 
 - Preserve the sender/recipient creation flow unless explicitly changing product behavior.
 - Preserve Postgres as the only source of truth.
-- Do not reintroduce Airtable or local JSON storage.
+- Do not introduce local JSON storage as a persistence fallback.
 - Keep gift pages fun, clear, and mobile-friendly.
 - Treat claimed and sent gifts as closed states.
 - Be careful with optional fields returned through `getServerSideProps`; use `null` instead of `undefined` for serialized data.
