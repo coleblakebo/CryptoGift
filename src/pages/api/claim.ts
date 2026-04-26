@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { sendGiftClaimedEmail } from '../../lib/email'
 import { claimGift } from '../../lib/gifts'
 import { checkRateLimit, getRequestIp } from '../../lib/rate-limit'
 
@@ -35,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const gift = await claimGift(body.giftId, senderAlreadyHasAddress ? null : walletAddress)
-    return res.status(200).json({ ok: true, gift })
+    const email = await sendGiftClaimedEmail(gift)
+    return res.status(200).json({ ok: true, gift, email })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to save'
     const statusCode = message.includes('not found')

@@ -117,6 +117,8 @@ When adding a new holiday:
 - Build-check with `npm run build`.
 - Restart the dev server after changing `.env.local`.
 - Unsaved `.env.local` changes will not be visible to the app.
+- Email automation is server-side and optional. It uses `RESEND_API_KEY`, `EMAIL_FROM`, optional `EMAIL_REPLY_TO`, and `NEXT_PUBLIC_SITE_URL`.
+- Gift creation and claim submission should still succeed if email is not configured or if the email provider rejects a send.
 
 ## Git Workflow
 
